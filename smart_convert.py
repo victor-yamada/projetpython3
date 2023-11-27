@@ -35,26 +35,6 @@
 ###bou1.grid(side = BOTTOM)
 ###fen1.mainloop()
 
-#from tkinter import *
-#import requests
-
-#def get_exchange_rate(from_currency, to_currency):
- #   response = requests.get(f'https://api.exchangerate-api.com/v4/latest/{from_currency}')
-  ## return data['rates'][to_currency]
-
-#def convert_currency(amount, from_currency, to_currency):
- #   exchange_rate = get_exchange_rate(from_currency, to_currency)
-  #  return amount * exchange_rate
-
-#amount = float(input("Entrez le montant que vous souhaitez convertir: "))
-#from_currency = input("Entrez la devise actuelle: ").upper()
-#to_currency = input("Entrez la devise voulu: ").upper()
-
-#result = convert_currency(amount, from_currency, to_currency)
-#print(f"{amount} {from_currency} is equal to {result} {to_currency}")
-
-
-
 from tkinter import *
 import requests
 
@@ -63,11 +43,15 @@ def get_exchange_rate(from_currency, to_currency):
     data = response.json()
     return data['rates'][to_currency]
 
-def convert_currency():
-    amount = float(amount_entry.get())
-    from_currency = from_currency_entry.get().upper()
-    to_currency = to_currency_entry.get().upper()
+def convert_currency(amount, from_currency, to_currency):
+    exchange_rate = get_exchange_rate(from_currency, to_currency)
+    return amount * exchange_rate
 
-    result = convert_currency(amount, from_currency, to_currency)
-    result_label.config(text=f"{amount} {from_currency} is equal to {result} {to_currency}")
+amount = float(input("Entrez le montant que vous souhaitez convertir: "))
+from_currency = input("Entrez la devise actuelle: ").upper()
+to_currency = input("Entrez la devise voulu: ").upper()
 
+result = convert_currency(amount, from_currency, to_currency)
+print(f"{amount} {from_currency} is equal to {result} {to_currency}")
+
+app.mainloop()
