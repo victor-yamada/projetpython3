@@ -36,19 +36,22 @@ def convert_currency():
 
 def get_last_operation():
     try:
-        cursor.execute("SELECT * FROM précédent ORDER BY id DESC LIMIT 1")
+        cursor.execute("SELECT * FROM operations ORDER BY id DESC LIMIT 1")
         last_operation = cursor.fetchone()
 
-        entry_amount.delete(0, END)
-        entry_amount.insert(0, last_operation[1])
+        if last_operation:
+            entry_amount.delete(0, END)
+            entry_amount.insert(0, last_operation[1])
 
-        entry_from_currency.delete(0, END)
-        entry_from_currency.insert(0, last_operation[2])
+            entry_from_currency.delete(0, END)
+            entry_from_currency.insert(0, last_operation[2])
 
-        entry_to_currency.delete(0, END)
-        entry_to_currency.insert(0, last_operation[3])
+            entry_to_currency.delete(0, END)
+            entry_to_currency.insert(0, last_operation[3])
 
-        update_result_label(f"{last_operation[1]} {last_operation[2]} = {last_operation[4]} {last_operation[3]}")
+            update_result_label(f"{last_operation[1]} {last_operation[2]} = {last_operation[4]} {last_operation[3]}")
+        else:
+            update_result_label("Erreur! Aucune opération précédente n'a été effectuée.")
     
     except sqlite3.Error:
         update_result_label("Erreur! Aucune opération précédente n'a été effectuée.")
@@ -62,9 +65,9 @@ def reset_fields():
 conn = sqlite3.connect('convertisseur.db')
 cursor = conn.cursor()
 
-# Création de la table "précédent" 
+# Création de la table operations" 
 cursor.execute("""
-CREATE TABLE if not exists précédent (
+CREATE TABLE if not exists operations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     amount REAL,
     from_currency TEXT,
@@ -73,16 +76,6 @@ CREATE TABLE if not exists précédent (
 )
 """)
 
-# Création de la table "précédent" 
-cursor.execute("""
-CREATE TABLE if not exists précédent (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    amount REAL,
-    from_currency TEXT,
-    to_currency TEXT,
-    result REAL
-)
-""")
 
 app = Tk()
 app.configure(bg="Lightslategray")
